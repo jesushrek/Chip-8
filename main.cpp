@@ -9,7 +9,7 @@
 #include <raylib.h>
 #include <cstring>
 
-extern const int g_size { 10 };
+extern const int g_size { 20 };
 extern const Color g_font_color { BLACK };
 
 int main(int argc, char* argv[]) 
