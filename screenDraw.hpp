@@ -4,6 +4,7 @@
 #include <raylib.h>
 
 extern const int g_size;
+extern const Color g_font_color;
 
 void DrawInRayLib(Chip8* subject)
 { 
@@ -11,8 +12,8 @@ void DrawInRayLib(Chip8* subject)
     { 
         for (int j = 0; j < 64; ++j)
         { 
-            if (subject->screen[j * 64 + i])
-                DrawRectangle(j * g_size, i * g_size, g_size, g_size, WHITE);
+            if (subject->screen[i * 64 + j])
+                DrawRectangle(j * g_size, i * g_size, g_size, g_size, g_font_color);
         }
     }
 }

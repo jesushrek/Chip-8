@@ -6,10 +6,10 @@
 
 void keyboard(Chip8* subject)
 { 
-    subject->keyboard[0x1] = IsKeyDown(KEY_1);
-    subject->keyboard[0x2] = IsKeyDown(KEY_2);
-    subject->keyboard[0x3] = IsKeyDown(KEY_3);
-    subject->keyboard[0xC] = IsKeyDown(KEY_4);
+    subject->keyboard[0x1] = IsKeyDown(KEY_ONE);
+    subject->keyboard[0x2] = IsKeyDown(KEY_TWO);
+    subject->keyboard[0x3] = IsKeyDown(KEY_THREE);
+    subject->keyboard[0xC] = IsKeyDown(KEY_FOUR);
 
     subject->keyboard[0x4] = IsKeyDown(KEY_Q);
     subject->keyboard[0x5] = IsKeyDown(KEY_W);

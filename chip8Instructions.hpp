@@ -2,6 +2,8 @@
 #define CHIP8INSTRUCTIONS_HPP
 
 #include "chip8.hpp"
+#include <raylib.h>
+
 #include <cstdint>
 #include <cstdlib>
 
@@ -185,8 +187,8 @@ void RND_Vx_byte(Chip8* subject, uint16_t opcode) // Cxkk
 {
     uint8_t x = (opcode >> 8) & 0x000f;
 
-    uint8_t randomValue { uint8_t(rand() % 255) };
-    uint8_t kk = opcode & 0x0fff;
+    uint8_t randomValue { uint8_t(GetRandomValue(0, 255)) };
+    uint8_t kk = opcode & 0x00ff;
 
     subject->V[x] = kk & randomValue;
 }
@@ -208,7 +210,7 @@ void DRW_Vx_Vy_nibble(Chip8* subject, uint16_t opcode) // Dxyn
         uint8_t sprite_memory = subject->Memory[subject->I + row];
         for (int col = 0; col < 8; ++col) 
         { 
-            if (sprite_memory & (0x08 >> col))
+            if (sprite_memory & (0x80 >> col))
             { 
                 int height = (starting_y + row) % 32; 
                 int width  = (starting_x + col) % 64;
@@ -222,6 +224,7 @@ void DRW_Vx_Vy_nibble(Chip8* subject, uint16_t opcode) // Dxyn
             }
         }
     }
+
 }
 
 void SKP_Vx(Chip8* subject, uint16_t opcode) // Ex9E
@@ -261,7 +264,7 @@ void LD_VX_K(Chip8* subject, uint16_t opcode) //Fx0A
         subject->PC -= 2;
 }
 
-void LD_DT(Chip8* subject, uint16_t opcode) // Fx015
+void LD_DT_Vx(Chip8* subject, uint16_t opcode) // Fx015
 {
     uint8_t x = (opcode >> 8) & 0x000f;
     subject->DT = subject->V[x];
@@ -282,16 +285,16 @@ void ADD_I_Vx(Chip8* subject, uint16_t opcode) // Fx1E
 void LD_F_Vx(Chip8* subject, uint16_t opcode) // fx29
 {
     uint8_t x = (opcode >> 8) & 0x000f;
-    subject->I = (subject->V[x] * 0x5);
+    subject->I = ((subject->V[x] & 0x000f) * 0x5);
 }
 
 void LD_B_Vx(Chip8* subject, uint16_t opcode) // fx33
 {
-    uint8_t x = (opcode >> 8) && 0x000f;
+    uint8_t x = (opcode >> 8) & 0x000f;
 
     subject->Memory[subject->I] = subject->V[x] / 100; 
-    subject->Memory[subject->I] = (subject->V[x] / 10) % 10;
-    subject->Memory[subject->I] = (subject->V[x]) % 10;
+    subject->Memory[subject->I + 1] = (subject->V[x] / 10) % 10;
+    subject->Memory[subject->I + 2] = (subject->V[x]) % 10;
 }
 
 void LD_Brac_I_Close_Vx(Chip8* subject, uint16_t opcode) // fx55
