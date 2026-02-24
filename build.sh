@@ -1,1 +1,1 @@
-g++ chip8.hpp chip8Instructions.hpp  dispatcher.hpp  screenDraw.hpp chip8Keyboard.hpp main.cpp -o main -lraylib 
+g++ src/chip8.hpp src/chip8Instructions.hpp  src/dispatcher.hpp  src/screenDraw.hpp src/chip8Keyboard.hpp src/main.cpp -o main -lraylib 
