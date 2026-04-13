@@ -13,7 +13,7 @@
 constexpr int g_width {64};
 constexpr int g_height {32};
 constexpr int g_size {10};
-constexpr Color g_font_color {BLACK};
+constexpr Color g_font_color {GRAY};
 
 int main(int argc, char** argv) 
 { 
@@ -30,16 +30,16 @@ int main(int argc, char** argv)
     InitWindow(g_width * g_size, g_height * g_size, "Chip-8");
     SetTargetFPS(60);
     while (!WindowShouldClose()) { 
+        Keypad(machine);
         for (int i = 0; i < 10; ++i) { 
             uint16_t opcode = machine.memory[machine.PC] << 0x8 | machine.memory[machine.PC + 1];
             machine.PC += 2;
             dispatch(machine, opcode);
         }
 
-        Keypad(machine);
         BeginDrawing();
-        draw(machine);
         ClearBackground(LIGHTGRAY);
+        draw(machine);
         EndDrawing();
 
         if (machine.DT > 0) --machine.DT;

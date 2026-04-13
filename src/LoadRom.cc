@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 
-void loadRom(Chip8 subject, const char* path) 
+void loadRom(Chip8& subject, const char* path) 
 { 
     std::ifstream file(path, std::ios::binary | std::ios::ate);
     if (file.is_open()) 
@@ -20,7 +20,6 @@ void loadRom(Chip8 subject, const char* path)
         for (int i = 0; i < size; ++i) { 
             subject.memory[starting + i] = buffer[i];
         }
-    	delete[] buffer;
+        delete[] buffer;
     }
-
 }

@@ -11,7 +11,7 @@ uint8_t extractKK(uint16_t opcode) { return (opcode & 0x00FF); }
 uint16_t extractNibble(uint16_t opcode) { return (opcode & 0x000F); }
 
 // 00E0
-void CLS(Chip8 &subject) { std::memset(subject.screen, 0, sizeof subject.screen); }
+void CLS(Chip8 &subject) { std::memset(subject.screen, 0, 64 * 32 * sizeof *subject.screen); }
 
 // 00EE
 void RET(Chip8 &subject) 
@@ -27,7 +27,7 @@ void JP_addr(Chip8 &subject, uint16_t opcode) { subject.PC = extractNNN(opcode);
 void CALL_addr(Chip8 &subject, uint16_t opcode) 
 { 
     if (subject.SC >= 16) return;
-    subject.PC = subject.stack[subject.SC++];
+    subject.stack[subject.SC++] = subject.PC;
     JP_addr(subject, opcode);
 }
 
@@ -72,7 +72,7 @@ void ADD_VX_VY(Chip8 &subject, uint16_t opcode)
 { 
     uint16_t result = (subject.V[extractX(opcode)] + subject.V[extractY(opcode)]);
     subject.V[0x0F] = (result > 0x0FF); // 0x0FF255
-    subject.V[extractX(opcode)] = extractKK(opcode);
+    subject.V[extractX(opcode)] = result & 0x00FF;
 }
 
 // 8xy5
@@ -99,7 +99,7 @@ void SUBN_VX_VY(Chip8 &subject, uint16_t opcode)
 // 8xyE
 void SHL_VX_VY(Chip8 &subject, uint16_t opcode)
 { 
-    subject.V[0x0F] = (subject.V[extractX(opcode)] & 0x80); 
+    subject.V[0x0F] = (subject.V[extractX(opcode)] & 0x80)? 1 : 0; 
     subject.V[extractX(opcode)] *= 2;;
 }
 
@@ -110,7 +110,7 @@ void SNE_VX_VY(Chip8 &subject, uint16_t opcode)
 }
 
 // Annn
-void LD_I_ADDR(Chip8 &subject, uint16_t opcode) { subject.I = extractNNN(subject.I); }
+void LD_I_ADDR(Chip8 &subject, uint16_t opcode) { subject.I = extractNNN(opcode); }
 
 // Bnnn
 void JP_V0_ADDR(Chip8 &subject, uint16_t opcode) { subject.PC = extractNNN(opcode) + subject.V[0x0]; }
@@ -208,6 +208,7 @@ void LD_VX_I(Chip8 &subject, uint16_t opcode)
 void dispatch(Chip8 &subject, uint16_t opcode) 
 { 
     uint8_t current_instruction = (opcode >> 12) & 0x0f;
+
     switch(current_instruction) { 
         case 0x0:
             if (opcode == 0x00E0) CLS(subject); 
