@@ -125,8 +125,8 @@ void RND_VX_BYTE(Chip8 &subject, uint16_t opcode)
 // Dxyn
 void DRW_VX_VY_NIBBLE(Chip8 &subject, uint16_t opcode)
 { 
-    int starting_x { subject.V[extractX(opcode)] };
-    int starting_y { subject.V[extractY(opcode)] };
+    int starting_x { subject.V[extractX(opcode)] % 64 };
+    int starting_y { subject.V[extractY(opcode)] % 32 };
     int sprite_height { extractNibble(opcode) };
 
     subject.V[0x0F] = 0;
@@ -147,10 +147,10 @@ void DRW_VX_VY_NIBBLE(Chip8 &subject, uint16_t opcode)
 }
 
 // Ex9E
-void SKP_VX(Chip8 &subject, uint16_t opcode) { if (subject.keyPad[extractX(opcode)]) subject.PC += 2; }
+void SKP_VX(Chip8 &subject, uint16_t opcode) { if (subject.keyPad[subject.V[extractX(opcode)]]) subject.PC += 2; }
 
 // ExA1
-void SKNP_VX(Chip8 &subject, uint16_t opcode) { if (!subject.keyPad[extractX(opcode)]) subject.PC += 2; } 
+void SKNP_VX(Chip8 &subject, uint16_t opcode) { if (!subject.keyPad[subject.V[extractX(opcode)]]) subject.PC += 2; } 
 
 // Fx07
 void LD_VX_DT(Chip8 &subject, uint16_t opcode) { subject.V[extractX(opcode)] = subject.DT; }
