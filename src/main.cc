@@ -31,7 +31,7 @@ int main(int argc, char** argv)
     SetTargetFPS(60);
     while (!WindowShouldClose()) { 
         Keypad(machine);
-        for (int i = 0; i < 10; ++i) { 
+        for (int i = 0; i < 30; ++i)  { 
             uint16_t opcode = machine.memory[machine.PC] << 0x8 | machine.memory[machine.PC + 1];
             machine.PC += 2;
             dispatch(machine, opcode);
